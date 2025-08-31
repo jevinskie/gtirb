@@ -1,6 +1,69 @@
 set(PROJECT_NAME gtirb)
 
-add_subdirectory(gtirb/proto)
+# add_subdirectory(gtirb/proto)
+
+set(GTIRB_PROTO_FILES
+  AuxData.proto
+  ByteInterval.proto
+  CFG.proto
+  CMakeLists.txt
+  CodeBlock.proto
+  DataBlock.proto
+  IR.proto
+  Module.proto
+  Offset.proto
+  ProxyBlock.proto
+  Section.proto
+  Symbol.proto
+  SymbolicExpression.proto
+  v0/AuxData.proto
+  v0/AuxDataContainer.proto
+  v0/Block.proto
+  v0/ByteMap.proto
+  v0/CFG.proto
+  v0/CMakeLists.txt
+  v0/DataObject.proto
+  v0/IR.proto
+  v0/ImageByteMap.proto
+  v0/Module.proto
+  v0/Offset.proto
+  v0/ProxyBlock.proto
+  v0/Section.proto
+  v0/Symbol.proto
+  v0/SymbolicExpression.proto
+)
+
+set(GTIRB_PROTO_FILE_PATHS)
+foreach(PB ${GTIRB_PROTO_FILES})
+    set(PB "${CMAKE_CURRENT_SOURCE_DIR}/../proto/${PB}")
+    list(APPEND GTIRB_PROTO_FILE_PATHS ${PB})
+endforeach()
+
+message(WARNING "GTIRB_PROTO_FILE_PATHS: ${GTIRB_PROTO_FILE_PATHS}")
+
+add_library(gtirb_proto OBJECT ${GTIRB_PROTO_FILE_PATHS})
+target_link_libraries(gtirb_proto PUBLIC protobuf::libprotobuf)
+set(PROTO_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/gtirb/proto")
+target_include_directories(gtirb_proto PUBLIC "$<BUILD_INTERFACE:${PROTO_BINARY_DIR}>")
+
+
+protobuf_generate(
+    TARGET gtirb_proto
+    IMPORT_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../proto"
+    PROTOC_OUT_DIR "${PROTO_BINARY_DIR}")
+
+# protobuf_generate(
+#     TARGET gtirb_proto
+#     IMPORT_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../proto
+#     PROTOC_OUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/proto)
+
+install(
+  TARGETS gtirb_proto
+  # COMPONENT proto_library
+  EXPORT gtirbTargets
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+)
 
 if(GTIRB_RUN_CLANG_TIDY)
   find_program(
@@ -88,9 +151,9 @@ set(${PROJECT_NAME}_SRC
     Utility.cpp
 )
 
-file(GLOB ProtoFiles "${CMAKE_CURRENT_SOURCE_DIR}/gtirb/proto/*.proto")
-set(${PROJECT_NAME}_PROTO ${ProtoFiles})
-source_group("proto" FILES ${ProtoFiles})
+# file(GLOB ProtoFiles "${CMAKE_CURRENT_SOURCE_DIR}/gtirb/proto/*.proto")
+# set(${PROJECT_NAME}_PROTO ${ProtoFiles})
+# source_group("proto" FILES ${ProtoFiles})
 
 if(UNIX AND NOT WIN32)
   set(SYSLIBS ${CMAKE_DL_LIBS})
@@ -137,10 +200,11 @@ target_link_libraries(
   ${PROJECT_NAME}
   PUBLIC ${SYSLIBS}
          ${Boost_LIBRARIES}
-         ${Protobuf_LIBRARIES}
+        #  protobuf::libprotobuf
+         gtirb_proto
          # Link in this static lib, but don't make it a transitive dependency of
          # TestGTIRB, etc
-  PRIVATE gtirb_proto
+  # PRIVATE gtirb_proto
 )
 target_compile_definitions(
   ${PROJECT_NAME} PRIVATE GTIRB_${PROJECT_NAME}_EXPORTS

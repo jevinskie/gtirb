@@ -3,7 +3,7 @@
 #
 
 # Need 3.10 to support CXX_STANDARD=17 and protobuf::protoc
-cmake_minimum_required(VERSION 3.10.0)
+cmake_minimum_required(VERSION 3.22.0)
 
 # The version.txt file is the official record of the version number. We use the
 # contents of that file to set the project version for use in other CMake files.
@@ -422,25 +422,7 @@ endif()
 # ---------------------------------------------------------------------------
 # protobuf
 # ---------------------------------------------------------------------------
-if(CL_API)
-  find_package(Protobuf 3.7.0 REQUIRED)
-else()
-  find_package(Protobuf 3.0.0 REQUIRED)
-endif()
-if(NOT Protobuf_PROTOC_EXECUTABLE)
-  # find_package only fails if the protobuf libraries or headers cannot be
-  # found. It does not treat failing to find the protobuf compiler as an error,
-  # so we do that explicitly here.
-  message(
-    FATAL_ERROR
-      "Could not find Protobuf compiler 'protoc'. Please make sure the "
-      "Protobuf compiler is installed."
-  )
-endif()
-
-if(Protobuf_VERSION VERSION_LESS 3.2)
-  add_definitions(-DPROTOBUF_SET_BYTES_LIMIT)
-endif()
+find_package(Protobuf 32.0.0 REQUIRED COMPONENTS protobuf::libprotobuf CONFIG)
 
 if(NOT BUILD_SHARED_LIBS)
   set(Protobuf_USE_STATIC_LIBS ON)
