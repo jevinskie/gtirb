@@ -3,6 +3,7 @@
 #
 
 # Need 3.10 to support CXX_STANDARD=17 and protobuf::protoc
+# Need 4.0 for CMAKE_POLICY_VERSION_MINIMUM
 # Need 4.1 to support cmake_pkg_config(IMPORT) for docs/examples/ex-jump capstone
 cmake_minimum_required(VERSION 4.1.0)
 
@@ -37,6 +38,7 @@ include(CheckIncludeFile)
 include(Macros.cmake)
 include(AlignOf.cmake)
 include(CMakePackageConfigHelpers)
+include(CMakeDependentOption)
 
 option(ENABLE_CONAN "Use Conan to inject dependencies" OFF)
 
@@ -357,48 +359,22 @@ endif()
 # ---------------------------------------------------------------------------
 # Google Test Application
 # ---------------------------------------------------------------------------
+set(GITRB_NEEDS_GTEST FALSE)
 if(GTIRB_ENABLE_TESTS AND CXX_API)
-  # Pull in Google Test
-  # https://github.com/google/googletest/tree/master/googletest#incorporating-
-  # into-an-existing-cmake-project
-
-  # Download and unpack googletest at configure time
-  configure_file(CMakeLists.googletest googletest-download/CMakeLists.txt)
-
-  execute_process(
-    COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
-    RESULT_VARIABLE result
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/googletest-download"
-  )
-
-  if(result)
-    message(WARNING "CMake step for googletest failed: ${result}")
+  set(GITRB_NEEDS_GTEST TRUE)
+endif()
+cmake_dependent_option(GTIRB_USE_EXTERNAL_GTEST "Use external googletest" ON GITRB_NEEDS_GTEST OFF)
+message(WARNING "GITRB_NEEDS_GTEST: ${GITRB_NEEDS_GTEST} GTIRB_USE_EXTERNAL_GTEST: ${GTIRB_USE_EXTERNAL_GTEST}")
+if(GITRB_NEEDS_GTEST)
+  message(WARNING "foo1")
+  if(GTIRB_USE_EXTERNAL_GTEST)
+    message(WARNING "foo2")
+    find_package(GTest CONFIG REQUIRED)
+  else()
+    message(WARNING "foo3")
   endif()
-
-  execute_process(
-    COMMAND "${CMAKE_COMMAND}" --build .
-    RESULT_VARIABLE result
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/googletest-download"
-  )
-
-  if(result)
-    message(WARNING "Build step for googletest failed: ${result}")
-  endif()
-
-  # Prevent overriding the parent project's compiler/linker settings on Windows
-  set(gtest_force_shared_crt
-      ON
-      CACHE BOOL "" FORCE
-  )
-
-  # Add googletest directly to our build. This defines the gtest and gtest_main
-  # targets.
-  add_subdirectory(
-    "${CMAKE_BINARY_DIR}/googletest-src" "${CMAKE_BINARY_DIR}/googletest-build"
-    EXCLUDE_FROM_ALL
-  )
-
-  include_directories("${gtest_SOURCE_DIR}/include")
+else()
+  message(WARNING "foo4")
 endif()
 
 # ---------------------------------------------------------------------------

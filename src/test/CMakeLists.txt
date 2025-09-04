@@ -4,7 +4,6 @@
 set(PROJECT_NAME TestGTIRB)
 
 enable_testing()
-include_directories(${GTEST_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_compile_options(-DDEBUG)
@@ -70,7 +69,7 @@ target_compile_definitions(
 )
 
 target_link_libraries(
-  ${PROJECT_NAME} ${SYSLIBS} ${Boost_LIBRARIES} gtest gtest_main gtirb
+  ${PROJECT_NAME} ${SYSLIBS} ${Boost_LIBRARIES} GTest::gtest GTest::gtest_main gtirb
 )
 
 # PrepTestGTIRB
@@ -121,7 +120,7 @@ target_compile_definitions(
 )
 
 target_link_libraries(
-  ${PROJECT_NAME} ${SYSLIBS} ${Boost_LIBRARIES} gtest gtest_main gtirb
+  ${PROJECT_NAME} ${SYSLIBS} ${Boost_LIBRARIES} GTest::gtest GTest::gtest_main gtirb
 )
 
 # testgtirb_deprecated_utils
@@ -135,15 +134,15 @@ set(${PROJECT_NAME}_SRC UtilsUsingGtirbNamespace.test.cpp
 
 gtirb_add_executable_gtest()
 
-if((CMAKE_CXX_COMPILER_ID STREQUAL "GNU") OR (${CMAKE_CXX_COMPILER_ID} STREQUAL
-                                              Clang)
-)
+if((CMAKE_CXX_COMPILER_ID STREQUAL "GNU") OR ((${CMAKE_CXX_COMPILER_ID} STREQUAL
+                                              Clang)) OR (${CMAKE_CXX_COMPILER_ID} STREQUAL
+                                              AppleClang))
   # Disable deprecation warnings
   target_compile_options(${PROJECT_NAME} PRIVATE -Wno-deprecated-declarations)
 endif()
 
 target_link_libraries(
-  ${PROJECT_NAME} ${SYSLIBS} ${Boost_LIBRARIES} gtest gtest_main gtirb
+  ${PROJECT_NAME} ${SYSLIBS} ${Boost_LIBRARIES} GTest::gtest GTest::gtest_main gtirb
 )
 
 add_subdirectory(testInputBinary)

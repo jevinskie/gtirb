@@ -77,7 +77,7 @@ file(GLOB PY_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/gtirb/*.py
 
 add_custom_target(pygtirb ALL DEPENDS ${PY_SOURCES} py-proto)
 add_custom_command(
-  TARGET pygtirb
+  TARGET pygtirb POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/gtirb"
           "${CMAKE_CURRENT_BINARY_DIR}/tests"
   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/gtirb"
