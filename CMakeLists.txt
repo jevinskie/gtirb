@@ -3,7 +3,8 @@
 #
 
 # Need 3.10 to support CXX_STANDARD=17 and protobuf::protoc
-cmake_minimum_required(VERSION 3.10.0)
+# Need 4.1 to support cmake_pkg_config(IMPORT) for docs/examples/ex-jump capstone
+cmake_minimum_required(VERSION 4.1.0)
 
 # The version.txt file is the official record of the version number. We use the
 # contents of that file to set the project version for use in other CMake files.
@@ -22,6 +23,8 @@ string(REGEX MATCH "VERSION_PROTOBUF ([0-9]*)" _ ${ver})
 set(GTIRB_PROTOBUF_VERSION ${CMAKE_MATCH_1})
 
 cmake_policy(SET CMP0048 NEW)
+cmake_policy(SET CMP0167 NEW) # use boost's cmake files not cmake's bundled ones
+cmake_policy(SET CMP0094 NEW) # default to Python3_FIND_STRATEGY=LOCATION
 project(
   GTIRB
   VERSION "${GTIRB_MAJOR_VERSION}.${GTIRB_MINOR_VERSION}.${GTIRB_PATCH_VERSION}"

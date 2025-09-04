@@ -37,10 +37,13 @@ if(CXX_API)
   target_link_libraries(ex-functions gtirb)
   target_compile_definitions(ex-functions PRIVATE GTIRB_WRAP_UTILS_IN_NAMESPACE)
 
-  find_library(CAPSTONE NAMES capstone)
-  if(CAPSTONE)
+  # find_library(CAPSTONE NAMES capstone)
+  # find_package(CAPSTONE)
+  # I have to hack homebrew capstone.pc because idir is include/capstone and it needs include/
+  cmake_pkg_config(IMPORT capstone)
+  if(PKGCONFIG_capstone_FOUND)
     add_executable(ex-jumps jumps.cpp)
-    target_link_libraries(ex-jumps gtirb ${CAPSTONE})
+    target_link_libraries(ex-jumps gtirb PkgConfig::capstone)
     target_compile_definitions(ex-jumps PRIVATE GTIRB_WRAP_UTILS_IN_NAMESPACE)
   endif()
 
