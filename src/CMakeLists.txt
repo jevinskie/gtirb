@@ -95,38 +95,38 @@ endif()
 
 # generate version.h from version.h.in
 configure_file(
-  "${CMAKE_SOURCE_DIR}/include/gtirb/version.h.in"
-  "${CMAKE_BINARY_DIR}/include/gtirb/version.h" @ONLY
+  "${GTIRB_SOURCE_DIR}/include/gtirb/version.h.in"
+  "${GTIRB_BINARY_DIR}/include/gtirb/version.h" @ONLY
 )
 
 # specify header files that need to be installed
 set(${PROJECT_NAME}_H
-    "${CMAKE_SOURCE_DIR}/include/gtirb/Addr.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/Allocator.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/AuxData.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/AuxDataContainer.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/AuxDataSchema.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/ByteInterval.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/CFG.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/Casting.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/CfgNode.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/CodeBlock.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/Context.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/DataBlock.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/DecodeMode.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/ErrorOr.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/Export.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/IR.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/Module.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/Node.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/Observer.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/Offset.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/ProxyBlock.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/Section.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/Symbol.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/SymbolicExpression.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/Utility.hpp"
-    "${CMAKE_SOURCE_DIR}/include/gtirb/gtirb.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/Addr.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/Allocator.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/AuxData.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/AuxDataContainer.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/AuxDataSchema.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/ByteInterval.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/CFG.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/Casting.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/CfgNode.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/CodeBlock.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/Context.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/DataBlock.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/DecodeMode.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/ErrorOr.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/Export.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/IR.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/Module.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/Node.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/Observer.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/Offset.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/ProxyBlock.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/Section.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/Symbol.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/SymbolicExpression.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/Utility.hpp"
+    "${GTIRB_SOURCE_DIR}/include/gtirb/gtirb.hpp"
 )
 
 # specify source files
@@ -171,25 +171,25 @@ if(WIN32)
   # moment, treat everything as a pre-release build.
   set(GTIRB_IS_PRERELEASE 1)
   configure_file(
-    ${CMAKE_SOURCE_DIR}/resources/windows_version_resource.rc.in
-    ${CMAKE_BINARY_DIR}/version.rc @ONLY
+    ${GTIRB_SOURCE_DIR}/resources/windows_version_resource.rc.in
+    ${GTIRB_BINARY_DIR}/version.rc @ONLY
   )
-  target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/version.rc)
-  source_group(Resources FILES ${CMAKE_BINARY_DIR}/version.rc)
+  target_sources(${PROJECT_NAME} PRIVATE ${GTIRB_BINARY_DIR}/version.rc)
+  source_group(Resources FILES ${GTIRB_BINARY_DIR}/version.rc)
 endif()
 
 # Find our headers
 target_include_directories(
-  ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+  ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${GTIRB_SOURCE_DIR}/include>
 )
 target_include_directories(
-  ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
+  ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${GTIRB_BINARY_DIR}/include>
 )
 target_include_directories(
-  ${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include/gtirb>
+  ${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${GTIRB_SOURCE_DIR}/include/gtirb>
 )
 target_include_directories(
-  ${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/src/>
+  ${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${GTIRB_BINARY_DIR}/src/>
 )
 
 # NOTE (2020-12): tried using protobuf::libprotobuf to get relocatable exports,
@@ -255,11 +255,11 @@ if(UNIX
     TARGET ${PROJECT_NAME}
     POST_BUILD
     COMMAND objcopy --only-keep-debug $<TARGET_FILE:${PROJECT_NAME}>
-            ${CMAKE_BINARY_DIR}/bin/${BUILD_ID_SUFFIX}.debug
+            ${GTIRB_BINARY_DIR}/bin/${BUILD_ID_SUFFIX}.debug
     COMMAND objcopy --strip-debug $<TARGET_FILE:${PROJECT_NAME}>
   )
   install(
-    FILES "${CMAKE_BINARY_DIR}/bin/${BUILD_ID_SUFFIX}.debug"
+    FILES "${GTIRB_BINARY_DIR}/bin/${BUILD_ID_SUFFIX}.debug"
     COMPONENT debug-file
     DESTINATION "lib/debug/.build-id/${BUILD_ID_PREFIX}"
   )
@@ -291,12 +291,12 @@ install(
   DESTINATION include/gtirb
 )
 install(
-  DIRECTORY "${CMAKE_BINARY_DIR}/include/gtirb/proto"
+  DIRECTORY "${GTIRB_BINARY_DIR}/include/gtirb/proto"
   COMPONENT headers
   DESTINATION include/gtirb
 )
 install(
-  FILES "${CMAKE_BINARY_DIR}/include/gtirb/version.h"
+  FILES "${GTIRB_BINARY_DIR}/include/gtirb/version.h"
   COMPONENT headers
   DESTINATION include/gtirb
 )

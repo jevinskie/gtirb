@@ -35,7 +35,7 @@ configure_file(setup.py.in setup.py @ONLY)
 configure_file(.coveragerc .coveragerc COPYONLY)
 configure_file(README.md README COPYONLY)
 # Copy the license from the top-level of the source repo.
-configure_file(${CMAKE_SOURCE_DIR}/LICENSE.txt LICENSE COPYONLY)
+configure_file(${GTIRB_SOURCE_DIR}/LICENSE.txt LICENSE COPYONLY)
 
 # ---------------------------------------------------------------------------
 # Building the gtirb protobuf files into python

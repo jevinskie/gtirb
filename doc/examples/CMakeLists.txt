@@ -6,11 +6,11 @@ if(CL_API)
 endif(CL_API)
 
 if(CXX_API)
-  include_directories("${CMAKE_SOURCE_DIR}/include")
+  include_directories("${GTIRB_SOURCE_DIR}/include")
   # Find protobuf generated headers in the build directory
-  include_directories("${CMAKE_BINARY_DIR}/src/")
+  include_directories("${GTIRB_BINARY_DIR}/src/")
   # Find our version.h header file
-  include_directories("${CMAKE_BINARY_DIR}/include")
+  include_directories("${GTIRB_BINARY_DIR}/include")
 
   # Suppress warning from protobuf headers.
   if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)

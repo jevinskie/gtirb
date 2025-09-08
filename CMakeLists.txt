@@ -5,6 +5,9 @@
 # Need 3.10 to support CXX_STANDARD=17 and protobuf::protoc
 cmake_minimum_required(VERSION 3.22.0)
 
+set(GTIRB_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+set(GTIRB_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+
 # The version.txt file is the official record of the version number. We use the
 # contents of that file to set the project version for use in other CMake files.
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/version.txt" ver)
@@ -528,7 +531,7 @@ if(PACKAGE_POLICY STREQUAL "unix")
 
   # Provides copyright file for Unix packages.
   install(
-    FILES ${CMAKE_SOURCE_DIR}/LICENSE.txt
+    FILES ${GTIRB_SOURCE_DIR}/LICENSE.txt
     COMPONENT license
     DESTINATION share/doc/gtirb
     RENAME copyright
@@ -538,7 +541,7 @@ elseif(PACKAGE_POLICY STREQUAL "conan")
 
   # Provides LICENSE.txt for Conan packages
   install(
-    FILES ${CMAKE_SOURCE_DIR}/LICENSE.txt
+    FILES ${GTIRB_SOURCE_DIR}/LICENSE.txt
     COMPONENT license
     DESTINATION licenses
   )
@@ -576,7 +579,7 @@ set(CPACK_PROTOBUF_VERSION_UPPER_BOUND
 )
 set(CPACK_PROTOBUF_VERSION_LOWER_BOUND "${Protobuf_VERSION}")
 set(CPACK_GTIRB_VERSION "${GTIRB_VERSION}")
-set(CPACK_SOURCE_DIR ${CMAKE_SOURCE_DIR})
+set(CPACK_SOURCE_DIR ${GTIRB_SOURCE_DIR})
 
 include(CPack)
 

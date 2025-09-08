@@ -1,9 +1,9 @@
 set(SDT_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/write-documentation.lisp)
-set(README ${CMAKE_SOURCE_DIR}/cl/README.md)
+set(README ${GTIRB_SOURCE_DIR}/cl/README.md)
 set(HTML_INDEX ${CMAKE_BINARY_DIR}/doc/html/cl/index.html)
 
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/doc/html/cl")
-file(GLOB CL_SOURCES ${CMAKE_SOURCE_DIR}/cl/*.lisp ${CMAKE_SOURCE_DIR}/cl/*.asd)
+file(GLOB CL_SOURCES ${GTIRB_BINARY_DIR}/cl/*.lisp ${GTIRB_SOURCE_DIR}/cl/*.asd)
 
 add_custom_command(
   OUTPUT ${HTML_INDEX}
@@ -11,7 +11,7 @@ add_custom_command(
   COMMAND
     ${LISP} --noinform --dynamic-space-size 16384 --no-userinit --no-sysinit
     --disable-debugger --load ${QUICKLISP}/setup.lisp --eval
-    "(asdf:initialize-source-registry `(:source-registry (:tree \"${CMAKE_SOURCE_DIR}/cl\") :inherit-configuration))"
+    "(asdf:initialize-source-registry `(:source-registry (:tree \"${GTIRB_BINARY_DIR}/cl\") :inherit-configuration))"
     --script ${SDT_SCRIPT} gtirb ${README} ${HTML_INDEX}
   VERBATIM
   COMMENT "Generating API documentation with SDT"
