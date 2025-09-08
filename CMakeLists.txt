@@ -332,71 +332,71 @@ endif()
 # ---------------------------------------------------------------------------
 # Boost
 # ---------------------------------------------------------------------------
-if(CXX_API)
-  find_package(Boost 1.68 REQUIRED)
+# if(CXX_API)
+#   find_package(Boost 1.68 REQUIRED)
 
-  add_compile_options(-DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE)
-  add_compile_options(-DBOOST_SYSTEM_NO_DEPRECATED)
+#   add_compile_options(-DBOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE)
+#   add_compile_options(-DBOOST_SYSTEM_NO_DEPRECATED)
 
-  # Boost versions 1.70.0+ may use Boost's provided CMake support rather than
-  # CMake's internal Boost support. The former uses "Boost::boost" and so on,
-  # while the latter uses "Boost_BOOST" and so on. This normalizes the two cases
-  # to use Boost_INCLUDE_DIRS and Boost_LIBRARIES.
-  if(TARGET Boost::headers)
-    get_target_property(
-      Boost_INCLUDE_DIRS Boost::headers INTERFACE_INCLUDE_DIRECTORIES
-    )
-  endif()
+#   # Boost versions 1.70.0+ may use Boost's provided CMake support rather than
+#   # CMake's internal Boost support. The former uses "Boost::boost" and so on,
+#   # while the latter uses "Boost_BOOST" and so on. This normalizes the two cases
+#   # to use Boost_INCLUDE_DIRS and Boost_LIBRARIES.
+#   if(TARGET Boost::headers)
+#     get_target_property(
+#       Boost_INCLUDE_DIRS Boost::headers INTERFACE_INCLUDE_DIRECTORIES
+#     )
+#   endif()
 
-  include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
-endif()
+#   include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+# endif()
 
 # ---------------------------------------------------------------------------
 # Google Test Application
 # ---------------------------------------------------------------------------
-if(GTIRB_ENABLE_TESTS AND CXX_API)
-  # Pull in Google Test
-  # https://github.com/google/googletest/tree/master/googletest#incorporating-
-  # into-an-existing-cmake-project
+# if(GTIRB_ENABLE_TESTS AND CXX_API)
+#   # Pull in Google Test
+#   # https://github.com/google/googletest/tree/master/googletest#incorporating-
+#   # into-an-existing-cmake-project
 
-  # Download and unpack googletest at configure time
-  configure_file(CMakeLists.googletest googletest-download/CMakeLists.txt)
+#   # Download and unpack googletest at configure time
+#   configure_file(CMakeLists.googletest googletest-download/CMakeLists.txt)
 
-  execute_process(
-    COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
-    RESULT_VARIABLE result
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/googletest-download"
-  )
+#   execute_process(
+#     COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
+#     RESULT_VARIABLE result
+#     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/googletest-download"
+#   )
 
-  if(result)
-    message(WARNING "CMake step for googletest failed: ${result}")
-  endif()
+#   if(result)
+#     message(WARNING "CMake step for googletest failed: ${result}")
+#   endif()
 
-  execute_process(
-    COMMAND "${CMAKE_COMMAND}" --build .
-    RESULT_VARIABLE result
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/googletest-download"
-  )
+#   execute_process(
+#     COMMAND "${CMAKE_COMMAND}" --build .
+#     RESULT_VARIABLE result
+#     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/googletest-download"
+#   )
 
-  if(result)
-    message(WARNING "Build step for googletest failed: ${result}")
-  endif()
+#   if(result)
+#     message(WARNING "Build step for googletest failed: ${result}")
+#   endif()
 
-  # Prevent overriding the parent project's compiler/linker settings on Windows
-  set(gtest_force_shared_crt
-      ON
-      CACHE BOOL "" FORCE
-  )
+#   # Prevent overriding the parent project's compiler/linker settings on Windows
+#   set(gtest_force_shared_crt
+#       ON
+#       CACHE BOOL "" FORCE
+#   )
 
-  # Add googletest directly to our build. This defines the gtest and gtest_main
-  # targets.
-  add_subdirectory(
-    "${CMAKE_BINARY_DIR}/googletest-src" "${CMAKE_BINARY_DIR}/googletest-build"
-    EXCLUDE_FROM_ALL
-  )
+#   # Add googletest directly to our build. This defines the gtest and gtest_main
+#   # targets.
+#   add_subdirectory(
+#     "${CMAKE_BINARY_DIR}/googletest-src" "${CMAKE_BINARY_DIR}/googletest-build"
+#     EXCLUDE_FROM_ALL
+#   )
 
-  include_directories("${gtest_SOURCE_DIR}/include")
-endif()
+#   include_directories("${gtest_SOURCE_DIR}/include")
+# endif()
 
 # ---------------------------------------------------------------------------
 # JUnit Test Application
@@ -422,12 +422,12 @@ endif()
 # ---------------------------------------------------------------------------
 # protobuf
 # ---------------------------------------------------------------------------
-find_package(Protobuf 32.0.0 REQUIRED COMPONENTS protobuf::libprotobuf CONFIG)
+find_package(Protobuf 32.0.0 REQUIRED COMPONENTS protobuf::libprotobuf protobuf::protoc CONFIG)
 
-if(NOT BUILD_SHARED_LIBS)
-  set(Protobuf_USE_STATIC_LIBS ON)
-endif()
-include_directories(SYSTEM ${PROTOBUF_INCLUDE_DIRS})
+# if(NOT BUILD_SHARED_LIBS)
+#   set(Protobuf_USE_STATIC_LIBS ON)
+# endif()
+# include_directories(SYSTEM ${PROTOBUF_INCLUDE_DIRS})
 
 add_subdirectory(proto)
 
@@ -563,8 +563,9 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY
 )
 set(CPACK_DEBIAN_PACKAGE_SECTION devel)
 
+get_target_property(GTIRB_PROTOBUF_VERSION protobuf::libprotobuf VERSION)
 string(REGEX MATCH "([^\.]+)\.([^\.]+)\.([^\.]+)" PROTOBUF_VERSION_MATCH
-             ${Protobuf_VERSION}
+             ${GTIRB_PROTOBUF_VERSION}
 )
 set(PROTOBUF_MAJOR_VERSION ${CMAKE_MATCH_1})
 set(PROTOBUF_MINOR_VERSION ${CMAKE_MATCH_2})
