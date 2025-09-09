@@ -49,7 +49,7 @@ target_include_directories(gtirb_proto PUBLIC "$<BUILD_INTERFACE:${PROTO_BINARY_
 
 protobuf_generate(
     TARGET gtirb_proto
-    IMPORT_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../proto"
+    IMPORT_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../proto" "${CMAKE_CURRENT_SOURCE_DIR}/../proto/v0"
     PROTOC_OUT_DIR "${PROTO_BINARY_DIR}")
 
 # protobuf_generate(
