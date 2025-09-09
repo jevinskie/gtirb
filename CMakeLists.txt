@@ -464,9 +464,9 @@ endif()
 if(CXX_API)
   # --- For direct use from the build directory/cmake registry ---
   # This exports the targets
-  export(TARGETS gtirb gtirb_proto
-         FILE "${CMAKE_CURRENT_BINARY_DIR}/gtirbTargets.cmake"
-  )
+  # export(TARGETS gtirb gtirb_proto
+  #        FILE "${CMAKE_CURRENT_BINARY_DIR}/gtirbTargets.cmake"
+  # )
   # This is the main config file that find_package will look for.
   configure_file(
     "${CMAKE_CURRENT_LIST_DIR}/gtirbConfig.cmake.in"
@@ -474,7 +474,7 @@ if(CXX_API)
   )
   # Add the build directory to the user CMake registry, so find_package can
   # locate it automatically.
-  export(PACKAGE gtirb)
+  # export(PACKAGE gtirb)
 
   # --- For the installed copy ---
   # Main config file for find_package, includes the targets file and defines the
@@ -502,17 +502,17 @@ if(CXX_API)
   )
 
   # Copy the config files to the install location
-  install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/export/gtirbConfig.cmake ${version_file}
-    DESTINATION lib/gtirb
-    COMPONENT cmake_config
-  )
+  # install(
+  #   FILES ${CMAKE_CURRENT_BINARY_DIR}/export/gtirbConfig.cmake ${version_file}
+  #   DESTINATION lib/gtirb
+  #   COMPONENT cmake_config
+  # )
   # This exports the targets to the install location.
-  install(
-    EXPORT gtirbTargets
-    COMPONENT cmake_target
-    DESTINATION lib/gtirb
-  )
+  # install(
+  #   EXPORT gtirbTargets
+  #   COMPONENT cmake_target
+  #   DESTINATION lib/gtirb
+  # )
 endif()
 
 # ---------------------------------------------------------------------------

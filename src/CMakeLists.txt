@@ -42,7 +42,7 @@ endforeach()
 message(WARNING "GTIRB_PROTO_FILE_PATHS: ${GTIRB_PROTO_FILE_PATHS}")
 
 add_library(gtirb_proto OBJECT ${GTIRB_PROTO_FILE_PATHS})
-target_link_libraries(gtirb_proto PUBLIC protobuf::libprotobuf)
+target_link_libraries(gtirb_proto PRIVATE protobuf::libprotobuf)
 set(PROTO_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/gtirb/proto")
 target_include_directories(gtirb_proto PUBLIC "$<BUILD_INTERFACE:${PROTO_BINARY_DIR}>")
 
@@ -57,13 +57,13 @@ protobuf_generate(
 #     IMPORT_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../proto
 #     PROTOC_OUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/proto)
 
-install(
-  TARGETS gtirb_proto
-  COMPONENT proto_library
-  EXPORT gtirbTargets
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-)
+# install(
+#   TARGETS gtirb_proto
+#   COMPONENT proto_library
+#   EXPORT gtirbTargets
+#   ARCHIVE DESTINATION lib
+#   LIBRARY DESTINATION lib
+# )
 
 if(GTIRB_RUN_CLANG_TIDY)
   find_program(
@@ -151,9 +151,8 @@ set(${PROJECT_NAME}_SRC
     Utility.cpp
 )
 
-# file(GLOB ProtoFiles "${CMAKE_CURRENT_SOURCE_DIR}/gtirb/proto/*.proto")
-# set(${PROJECT_NAME}_PROTO ${ProtoFiles})
-# source_group("proto" FILES ${ProtoFiles})
+set(${PROJECT_NAME}_PROTO ${GTIRB_PROTO_FILE_PATHS})
+source_group("proto" FILES ${GTIRB_PROTO_FILE_PATHS})
 
 if(UNIX AND NOT WIN32)
   set(SYSLIBS ${CMAKE_DL_LIBS})
@@ -188,9 +187,9 @@ target_include_directories(
 target_include_directories(
   ${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${GTIRB_SOURCE_DIR}/include/gtirb>
 )
-target_include_directories(
-  ${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${GTIRB_BINARY_DIR}/src/>
-)
+# target_include_directories(
+#   ${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${GTIRB_BINARY_DIR}/src/>
+# )
 
 # NOTE (2020-12): tried using protobuf::libprotobuf to get relocatable exports,
 # but it is apparently treated inconsistently between static and shared builds.
@@ -201,16 +200,16 @@ target_link_libraries(
   PUBLIC ${SYSLIBS}
          ${Boost_LIBRARIES}
         #  protobuf::libprotobuf
-         gtirb_proto
+        #  gtirb_proto
          # Link in this static lib, but don't make it a transitive dependency of
          # TestGTIRB, etc
-  # PRIVATE gtirb_proto
+  PRIVATE gtirb_proto
 )
 target_compile_definitions(
   ${PROJECT_NAME} PRIVATE GTIRB_${PROJECT_NAME}_EXPORTS
   GTIRB_WRAP_UTILS_IN_NAMESPACE
 )
-target_include_directories(${PROJECT_NAME} PUBLIC "${PROTOBUF_INCLUDE_DIRS}")
+# target_include_directories(${PROJECT_NAME} PUBLIC "${PROTOBUF_INCLUDE_DIRS}")
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
   # These four warnings come from protobuf headers, disabling them this way
