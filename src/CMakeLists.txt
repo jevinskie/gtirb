@@ -16,21 +16,21 @@ set(GTIRB_PROTO_FILES
   Section.proto
   Symbol.proto
   SymbolicExpression.proto
-  v0/AuxData.proto
-  v0/AuxDataContainer.proto
-  v0/Block.proto
-  v0/ByteMap.proto
-  v0/CFG.proto
-  v0/CMakeLists.txt
-  v0/DataObject.proto
-  v0/IR.proto
-  v0/ImageByteMap.proto
-  v0/Module.proto
-  v0/Offset.proto
-  v0/ProxyBlock.proto
-  v0/Section.proto
-  v0/Symbol.proto
-  v0/SymbolicExpression.proto
+  # v0/AuxData.proto
+  # v0/AuxDataContainer.proto
+  # v0/Block.proto
+  # v0/ByteMap.proto
+  # v0/CFG.proto
+  # v0/CMakeLists.txt
+  # v0/DataObject.proto
+  # v0/IR.proto
+  # v0/ImageByteMap.proto
+  # v0/Module.proto
+  # v0/Offset.proto
+  # v0/ProxyBlock.proto
+  # v0/Section.proto
+  # v0/Symbol.proto
+  # v0/SymbolicExpression.proto
 )
 
 set(GTIRB_PROTO_FILE_PATHS)
@@ -42,14 +42,14 @@ endforeach()
 message(WARNING "GTIRB_PROTO_FILE_PATHS: ${GTIRB_PROTO_FILE_PATHS}")
 
 add_library(gtirb_proto OBJECT ${GTIRB_PROTO_FILE_PATHS})
-target_link_libraries(gtirb_proto PRIVATE protobuf::libprotobuf)
+target_link_libraries(gtirb_proto PUBLIC Boost::headers PRIVATE protobuf::libprotobuf)
 set(PROTO_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/gtirb/proto")
 target_include_directories(gtirb_proto PUBLIC "$<BUILD_INTERFACE:${PROTO_BINARY_DIR}>")
 
 
 protobuf_generate(
     TARGET gtirb_proto
-    IMPORT_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../proto" "${CMAKE_CURRENT_SOURCE_DIR}/../proto/v0"
+    IMPORT_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../proto"
     PROTOC_OUT_DIR "${PROTO_BINARY_DIR}")
 
 # protobuf_generate(
