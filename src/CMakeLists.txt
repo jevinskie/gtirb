@@ -59,7 +59,7 @@ protobuf_generate(
 
 install(
   TARGETS gtirb_proto
-  # COMPONENT proto_library
+  COMPONENT proto_library
   EXPORT gtirbTargets
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
